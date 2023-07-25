@@ -44,29 +44,29 @@ def signup(request):
 class TodoListView(generics.ListCreateAPIView):
     """Returns all todos finished and unfinished"""
     permission_classes = [permissions.IsAuthenticated]
-    serializer = TodoSerializer
+    serializer_class = TodoSerializer
 
     def get_queryset(self):
-        return Todo.objects.filter(author=self.user).order_by('-date_created')
+        return Todo.objects.filter(author=self.request.user).order_by('-date_created')
     
     def perform_create(self, serializer):
-        serializer.save(author=self.user)
+        serializer.save(author=self.request.user)
 
 
 class UnfinishedTodoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer = TodoSerializer
+    serializer_class = TodoSerializer
 
     def get_queryset(self):
-        return Todo.objects.filter(author=self.user, is_read=False).order_by('-date_created')
+        return Todo.objects.filter(author=self.request.user, is_read=False).order_by('-date_created')
     
 
 class FinishedTodoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer = TodoSerializer
+    serializer_class = TodoSerializer
 
     def get_queryset(self):
-        return Todo.objects.filter(author=self.user, is_read=True).order_by('-date_created')
+        return Todo.objects.filter(author=self.request.user, is_read=True).order_by('-date_created')
 
 
 # class TodoDetailView(generics.RetrieveUpdateDestroyAPIView):
