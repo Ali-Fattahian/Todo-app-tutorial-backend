@@ -1,8 +1,8 @@
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics, permissions
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate, get_user_model
 
 
 @api_view(['POST'])
@@ -37,3 +37,7 @@ def signup(request):
         return Response(str(token[0]), status=status.HTTP_200_OK)
     
     return Response({'error': 'Please choose a different username'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class TodoListView(generics.ListCreateAPIView):
+#     permission_classes = [permissions.IsAuthenticated]
