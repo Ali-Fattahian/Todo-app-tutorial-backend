@@ -67,3 +67,10 @@ class FinishedTodoListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Todo.objects.filter(author=self.user, is_read=True).order_by('-date_created')
+
+
+# class TodoDetailView(generics.RetrieveUpdateDestroyAPIView):
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer = TodoSerializer
+
+#     def 
