@@ -48,3 +48,14 @@ class TodoListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Todo.objects.filter(author=self.user).order_by('-date_created')
+    
+    def perform_create(self, serializer):
+        serializer.save(author=self.user)
+
+
+class UnfinishedTodoListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer = TodoSerializer
+
+    def get_queryset(self):
+        return Todo.objects.filter(author=self.user, is_read=False).order_by('-date_created')
