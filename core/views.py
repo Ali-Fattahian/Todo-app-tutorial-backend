@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions
 from rest_framework.authtoken.models import Token
+from .serializers import TodoSerializer
+from .models import Todo
 
 
 @api_view(['POST'])
@@ -39,5 +41,10 @@ def signup(request):
     return Response({'error': 'Please choose a different username'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class TodoListView(generics.ListCreateAPIView):
-#     permission_classes = [permissions.IsAuthenticated]
+class TodoListView(generics.ListCreateAPIView):
+    """Returns all todos finished and unfinished"""
+    permission_classes = [permissions.IsAuthenticated]
+    serializer = TodoSerializer
+
+    def get_queryset(self):
+        return Todo.objects.filter(author=self.user).order_by('-date_created')
