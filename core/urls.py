@@ -7,4 +7,6 @@ urlpatterns = [
     path('todo-list', views.TodoListView.as_view(), name='todo-list'),
     path('todo-list-unfinished', views.UnfinishedTodoListView.as_view(), name='todo-list-unfinished'),
     path('todo-list-finished', views.FinishedTodoListView.as_view(), name='todo-list-finished'),
+    path('read-todo/<str:pk>', views.change_todo_to_read, name='change-todo-to-read'),
+    path('unread-todo/<str:pk>', views.change_todo_to_not_read, name='change-todo-to-not-read'),
 ]

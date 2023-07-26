@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, get_user_model
-from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions
 from rest_framework.authtoken.models import Token
@@ -74,3 +75,28 @@ class FinishedTodoListView(generics.ListAPIView):
 #     serializer = TodoSerializer
 
 #     def 
+
+
+@permission_classes([permissions.IsAuthenticated])
+@api_view(['PUT'])
+def change_todo_to_read(request, pk):
+    todo = get_object_or_404(Todo, pk=pk)
+
+    if request.user == todo.author:
+        todo.is_read = True
+        todo.save()
+        serializer = TodoSerializer(todo)
+        return Response({'todo': serializer.data}, status=status.HTTP_200_OK)
+    return Response({'error': 'You are not allowed to do this action'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@permission_classes([permissions.IsAuthenticated])
+@api_view(['PUT'])
+def change_todo_to_not_read(request, pk):
+    todo = get_object_or_404(Todo, pk=pk)
+
+    if request.user == todo.author:
+        todo.is_read = False
+        todo.save()
+        serializer = TodoSerializer(todo)
+        return Response({'todo': serializer.data}, status=status.HTTP_200_OK)
+    return Response({'error': 'You are not allowed to do this action'}, status=status.HTTP_401_UNAUTHORIZED)
