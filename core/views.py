@@ -100,3 +100,16 @@ def change_todo_to_unread(request, pk):
         serializer = TodoSerializer(todo)
         return Response({'todo': serializer.data}, status=status.HTTP_200_OK)
     return Response({'error': 'You are not allowed to do this action'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class DeleteTodoView(generics.DestroyAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.author == request.user:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'error': 'You are not allowed to do this action'}, status=status.HTTP_401_UNAUTHORIZED)
