@@ -91,7 +91,7 @@ def change_todo_to_read(request, pk):
 
 @permission_classes([permissions.IsAuthenticated])
 @api_view(['PUT'])
-def change_todo_to_not_read(request, pk):
+def change_todo_to_unread(request, pk):
     todo = get_object_or_404(Todo, pk=pk)
 
     if request.user == todo.author:
